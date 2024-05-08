@@ -1,11 +1,10 @@
 import heapq
+import time
 
-# Definição do ambiente
 def inicializar_ambiente():
     ambiente = [['.' for _ in range(6)] for _ in range(6)]
     return ambiente
 
-# Definição das posições iniciais dos elementos
 def definir_posicoes_iniciais(ambiente, entrada, saida, zumbis, presentes, paredes):
     ambiente[entrada[0]][entrada[1]] = 'E'
     ambiente[saida[0]][saida[1]] = 'S'
@@ -17,8 +16,7 @@ def definir_posicoes_iniciais(ambiente, entrada, saida, zumbis, presentes, pared
         ambiente[parede[0]][parede[1]] = '#'
     return ambiente
 
-# Definição da função para encontrar o menor caminho usando Dijkstra
-def dijkstra(grafo, inicio, fim):
+def a_estrela(grafo, inicio, fim):
     fila = [(0, inicio, [])]
     visitados = set()
     heapq.heapify(fila)
@@ -36,7 +34,6 @@ def dijkstra(grafo, inicio, fim):
     
     return float("inf"), []
 
-# Construção do grafo
 def construir_grafo(ambiente):
     grafo = {}
     for i in range(len(ambiente)):
@@ -54,16 +51,14 @@ def construir_grafo(ambiente):
                 grafo[(i, j)] = vizinhos
     return grafo
 
-# Exibição do ambiente
 def exibir_ambiente(ambiente):
     print("Ambiente:")
     for linha in ambiente:
         print(" ".join(linha))
 
-# Posições iniciais dos elementos
 entrada = (0, 0)
-saida = (5, 5)
-zumbis = [(1, 1), (2, 2), (3, 3), (4, 4), (1, 5), (2, 4), (3, 1), (4, 2)]
+saida = (5, 0)
+zumbis = [(4, 1), (4, 2), (3, 3), (4, 4), (1, 5), (2, 4), (3, 1), (4, 2)]
 presentes = [(1, 2), (2, 3), (3, 4), (4, 5), (5, 1), (5, 2), (5, 3), (5, 4)]
 paredes = [(0, 2), (2, 0)]
 
@@ -72,13 +67,13 @@ ambiente = definir_posicoes_iniciais(ambiente, entrada, saida, zumbis, presentes
 
 grafo = construir_grafo(ambiente)
 
-custo_caminho, caminho = dijkstra(grafo, entrada, saida)
+custo_caminho, caminho = a_estrela(grafo, entrada, saida)
 
 for posicao in caminho:
     ambiente[entrada[0]][entrada[1]] = '.'  # Remover a posição atual do agente
     ambiente[posicao[0]][posicao[1]] = 'E'  # Atualizar a posição do agente
     entrada = posicao  # Atualizar a posição atual do agente
     exibir_ambiente(ambiente)
-    input("Pressione Enter para continuar...")
+    time.sleep(1)
 
 print("Fim da simulação.")
