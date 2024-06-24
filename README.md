@@ -1,4 +1,3 @@
-todo:
+python3 main.py
 
- alterar posicao dos zumbis
-otimizar algoritmo de dijkstra
+python main.py
