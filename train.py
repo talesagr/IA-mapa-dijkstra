@@ -5,7 +5,7 @@ from q_learning import QLearningAgent
 if __name__ == "__main__":
     env = Environment()
     agent = QLearningAgent(env)
-    agent.train(120000)
+    agent.train(5000)
 
     agent.save_q_table("q_table.npy")
     
