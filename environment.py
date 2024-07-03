@@ -5,14 +5,14 @@ class Environment:
     def __init__(self):
         self.rows = 6
         self.cols = 6
-        self.state = (0, 0)
-        self.presents = {(0, 4), (0, 5), (1, 5), (3, 1), (4, 2), (4, 5), (5, 4), (5, 5)}
-        self.zombies = {(0, 2), (1, 4), (2, 1), (3, 2), (4, 1), (4, 4), (5, 1), (5, 2)}
-        self.walls = {(3, 4), (3, 5)}
-        self.exit = (5, 0)
+        self.state = (0, 5)
+        self.presents = { (1, 2), (3, 2), (4, 5) }
+        self.zombies =  { (1, 0), (1, 4), (3, 3), (5, 0), (5,4) }
+        self.walls = {(2, 3), (3, 4), (3, 5)}
+        self.exit = (5, 5)
         self.collected_presents = set()
-        self.present_value = 20
-        self.exit_value = len(self.presents) * self.present_value // 2
+        self.present_value = 10
+        self.exit_value = 100
         self.move_penalty = -1
         self.revisit_penalty = -5
         self.visited = set()
@@ -59,7 +59,7 @@ class Environment:
 
     def get_reward(self, state):
         if state in self.zombies:
-            return -100
+            return -10
         elif state in self.collected_presents:
             return self.move_penalty
         elif state in self.presents:
@@ -68,7 +68,7 @@ class Environment:
             if len(self.collected_presents) >= len(self.presents) // 2:
                 return self.exit_value
             else:
-                return -50
+                return -10
         else:
             return self.move_penalty
 
@@ -84,5 +84,8 @@ class Environment:
             self.grid_colors[next_state] = (200, 200, 200)  # Change color to grey when present is collected
         self.visited.add(next_state)
         self.state = next_state
-        done = next_state in self.zombies or self.is_terminal(next_state)
+        if next_state in self.zombies or next_state == self.exit:
+            done = True
+        else:
+            done = False
         return next_state, reward, done

@@ -3,7 +3,7 @@ import random
 from environment import Environment
 
 class QLearningAgent:
-    def __init__(self, env, alpha=0.10, gamma=0.7, epsilon=0.1, epsilon_decay=0.995, epsilon_min=0.01):
+    def __init__(self, env, alpha=0.10, gamma=0.7, epsilon=1.0, epsilon_decay=0.995, epsilon_min=0.2):
         self.env = env
         self.alpha = alpha
         self.gamma = gamma
@@ -44,12 +44,22 @@ class QLearningAgent:
                 self.epsilon *= self.epsilon_decay
             if episode % 1000 == 0:
                 print(f"Episode {episode}, Total Reward: {total_reward}")
+        self.save_q_table_txt('my_qtable.txt')
 
     def save_q_table(self, file_path):
         np.save(file_path, self.q_table)
 
     def load_q_table(self, file_path):
         self.q_table = np.load(file_path)
+
+    def save_q_table_txt(self, file_path):
+        with open(file_path, 'w') as f:
+            rows, cols, actions = self.q_table.shape
+            for i in range(rows):
+                for j in range(cols):
+                    f.write(f'Linha {i} Coluna {j}: ')
+                    f.write(' | '.join(f'{value:.3f}' for value in self.q_table[i, j]))
+                    f.write('\n')
 
 if __name__ == "__main__":
     env = Environment()
