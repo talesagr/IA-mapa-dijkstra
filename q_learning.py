@@ -3,13 +3,11 @@ import random
 from environment import Environment
 
 class QLearningAgent:
-    def __init__(self, env, alpha=0.10, gamma=0.7, epsilon=0.1, epsilon_decay=0.995, epsilon_min=0.01):
+    def __init__(self, env, alpha=0.10, gamma=0.7, epsilon=0.1):
         self.env = env
         self.alpha = alpha
         self.gamma = gamma
         self.epsilon = epsilon
-        self.epsilon_decay = epsilon_decay
-        self.epsilon_min = epsilon_min
         self.q_table = np.zeros((env.rows, env.cols, 4))
 
     def choose_action(self, state):
@@ -26,7 +24,7 @@ class QLearningAgent:
         td_target = reward + (self.gamma * self.q_table[next_row, next_col, best_next_action] * (1 - done))
         self.q_table[row, col, action] += self.alpha * (td_target - self.q_table[row, col, action])
 
-    def train(self, episodes, max_steps_per_episode=100):
+    def train(self, episodes, max_steps_per_episode=5000):
         rewards = []
         for episode in range(episodes):
             total_reward = 0
@@ -40,8 +38,6 @@ class QLearningAgent:
                 if done:
                     break
             rewards.append(total_reward)
-            if self.epsilon > self.epsilon_min:
-                self.epsilon *= self.epsilon_decay
             if episode % 1000 == 0:
                 print(f"Episode {episode}, Total Reward: {total_reward}")
 
